@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/simonko/Desktop/nginx_test/venv"
+VIRTUAL_ENV="/home/simonko/Desktop/super-awesome-game/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
