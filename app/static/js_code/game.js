@@ -8,45 +8,6 @@ const gravity = 0.2;
 
 canvContext.fillRect(0, 0, canvas.width, canvas.height);
 
-class wallSprite{
-  constructor ({player_id, wall_position, wall_dimensions}){
-    this.player_id = player_id;
-    this.wall_position = wall_position;
-    this.wall_dimensions = wall_dimensions;
-  }
-
-  draw() {
-    canvContext.fillStyle = "blue";
-    canvContext.fillRect(this.wall_position.x, this.wall_position.y, this.wall_dimensions.x, this.wall_dimensions.y)
-  }
-
-  update({wall_position, wall_dimensions}) {
-    this.wall_position.x = wall_position.x;
-    this.wall_position.y = wall_position.y;
-    this.wall_dimensions.x = wall_dimensions.x
-    this.wall_dimensions.y = wall_dimensions.y
-
-  }
-}
-
-class Sprite {
-  constructor({player_id, player_position}) {
-    this.player_id = player_id;
-    this.player_position = player_position;
-  }
-
-  draw() {
-    canvContext.fillStyle = "red";
-    console.log("will be drawing with: " + this.player_position.x + " " + this.player_position.y);
-    canvContext.fillRect(this.player_position.x, this.player_position.y, 20, 20)
-  }
-
-  update({player_position}) {
-    this.player_position.x = player_position.x;
-    this.player_position.y = player_position.y;
-
-  }
-}
 
 // Used to redraw everything on the screen
 function update_ui(update_ui_all_players){
@@ -54,6 +15,7 @@ function update_ui(update_ui_all_players){
   // Reset UI background 
   canvContext.fillStyle = "black";
   canvContext.fillRect(0, 0, canvas.width, canvas.height);
+  background.draw()
   for (let index_player = 0; index_player < update_ui_all_players.length; index_player++){
     update_ui_all_players[index_player].draw();
   }
@@ -61,8 +23,15 @@ function update_ui(update_ui_all_players){
 
 // Messages from Server Begins Here 
 // Setup Global vars for all players, EventSource
-let array_of_all_players = Array()
+const background = new backgroundSprite({
+  position: {
+    x: 0,
+    y: 0
+  },
+  imageSrc: 'static/images/background_1.png'
+})
 
+let array_of_all_players = Array()
 function GetUpdatePlayerDataInput(update_player_data_input) {
   // Parse incoming data [{"player_user_name", "player_coordinates": {"x", "y"}, "player_activity", "player_status", "player_inventory"},..]
   // Loop every element from incoming data
@@ -109,9 +78,6 @@ function GetUpdatePlayerDataInput(update_player_data_input) {
 
 window.addEventListener("keydown", async (event) => {
   let key_pressed = event.key 
-  // const request = new XMLHttpRequest();
-  // request.open("POST", "#");
-  // request.send(key_pressed);
   const sendOnKey = await fetch('/listen', {
     method: "POST",
     body: key_pressed

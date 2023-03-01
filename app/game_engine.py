@@ -25,6 +25,7 @@ class Player(BaseModel):
     player_coordinates: Dict[str,int]
     player_dimensions: Optional[Dict[str,int]] = None
 
+
     # Make sure that user has: Name, x/y_coordinates, Status(Health). 
     # Also username should be more than 3 chars and to avoid duplicate names -> lower case
     @root_validator(pre=True)
@@ -54,10 +55,12 @@ class Game:
     """
         Initiate Game, use player_input(pressed_key) to update players, use update_players_ui() to retrieve ui data
     """
-    __slots__ = "_all_players"
+    __slots__ = ("_all_players", "_canvasWidth", "_canvasHeight")
 
     def __init__(self) -> None:
         self._all_players: List[Player] = list()
+        self._canvasWidth: int = 1024
+        self._canvasHeight: int = 576
     
     def player_input(self,pressed_key: str, user_id: Optional[str] = "simple_user"):
         self.updateWalls()
@@ -65,20 +68,20 @@ class Game:
         pressed_key = pressed_key.lower()
         print(f"Keyy: {pressed_key}")
         if not self._all_players:
-            self._all_players.append(Player(player_user_name=user_id, player_coordinates={"x": 0, "y": 0}))
+            self._all_players.append(Player(player_user_name=user_id, player_coordinates={"x": randint(0, 1024), "y": randint(0, 576)}))
             return
         if user_id not in [player.player_user_name for player in self._all_players]:
-            self._all_players.append(Player(player_user_name=user_id, player_coordinates={"x": 0, "y": 0}))
+            self._all_players.append(Player(player_user_name=user_id, player_coordinates={"x": randint(0, 1024), "y": randint(0, 576)}))
             return
         user_id_to_update = [player.player_user_name for player in self._all_players].index(user_id)
 
-        if pressed_key == "a":
+        if pressed_key == "a" and self._all_players[user_id_to_update].player_coordinates["x"] > 0:
             self._all_players[user_id_to_update].player_coordinates["x"] -= 10
-        if pressed_key == "d":
+        if pressed_key == "d" and self._all_players[user_id_to_update].player_coordinates["x"]+25 < self._canvasWidth:
             self._all_players[user_id_to_update].player_coordinates["x"] += 10
-        if pressed_key == "w":
+        if pressed_key == "w" and self._all_players[user_id_to_update].player_coordinates["y"] > 0:
             self._all_players[user_id_to_update].player_coordinates["y"] -= 10
-        if pressed_key == "s":
+        if pressed_key == "s" and self._all_players[user_id_to_update].player_coordinates["y"]+25 < self._canvasHeight:
             self._all_players[user_id_to_update].player_coordinates["y"] += 10
         
     def update_players_ui(self):
@@ -89,10 +92,14 @@ class Game:
 
     def generateWalls(self) -> List[Player]:
         list_of_walls: List[Player] = list()
-        for inex_of_wall in range(10):
-            wall_x = randint(0, 1024)
-            wall_y = randint(0, 576)
-            list_of_walls.append(Player(player_user_name=f"wall_{inex_of_wall}", player_coordinates={"x": wall_x, "y": wall_y}, player_dimensions={"x": 10, "y": 100}))
+        for inex_of_wall in range(40):
+            wall_coord_x = randint(0, 1024)
+            wall_coord_y = randint(0, 576)
+            wall_dim_x = randint(100, 300)
+            wall_dim_y = randint(100, 300)
+            list_of_walls.append(Player(player_user_name=f"wall_{inex_of_wall}",
+                                         player_coordinates={"x": wall_coord_x, "y": wall_coord_y},
+                                           player_dimensions={"x": wall_dim_x, "y": wall_dim_y}))
         return list_of_walls
 
     def updateWalls(self):
