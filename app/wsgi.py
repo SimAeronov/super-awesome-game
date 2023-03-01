@@ -4,8 +4,6 @@ from utils.extensions import db
 from arena_interfaces.game_flask import game_flask
 from menu_interfaces.menus import menus
 
-from gevent import monkey; monkey.patch_all() # type: ignore
-from gevent.pywsgi import WSGIServer # type: ignore
 import os
 
 app = Flask(__name__)
@@ -33,5 +31,3 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
         app.run(debug=True)
-        http_server = WSGIServer(("localhost", 80), app)
-        http_server.serve_forever() # type: ignore

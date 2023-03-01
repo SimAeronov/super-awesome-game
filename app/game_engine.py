@@ -1,5 +1,6 @@
 from pydantic import BaseModel, validator, root_validator
 from typing import Union, List, Optional, Any, Dict
+from random import randint
 
 # Add Exceptions for New Player creation
 class playerUserNameError(Exception):
@@ -22,9 +23,7 @@ class playerMissingDataError(Exception):
 class Player(BaseModel):
     player_user_name: str
     player_coordinates: Dict[str,int]
-    player_activity: str
-    player_status: int
-    player_inventory: str
+    player_dimensions: Optional[Dict[str,int]] = None
 
     # Make sure that user has: Name, x/y_coordinates, Status(Health). 
     # Also username should be more than 3 chars and to avoid duplicate names -> lower case
@@ -32,7 +31,7 @@ class Player(BaseModel):
     @classmethod
     def check_all_data_is_entered(cls, values:'dict[str, Union[str, int]]'):
         """ Validate that all data is provided before proceeding"""
-        if "player_user_name" not in values or "player_coordinates" not in values or "player_status" not in values:
+        if "player_user_name" not in values or "player_coordinates" not in values:
             raise playerMissingDataError(message="Please make sure that all required data is present")
         return values
 
@@ -61,17 +60,15 @@ class Game:
         self._all_players: List[Player] = list()
     
     def player_input(self,pressed_key: str, user_id: Optional[str] = "simple_user"):
+        self.updateWalls()
         user_id = user_id.lower() # type: ignore
         pressed_key = pressed_key.lower()
+        print(f"Keyy: {pressed_key}")
         if not self._all_players:
-            self._all_players.append(Player(player_user_name=user_id, player_coordinates={"x": 0, "y": 0}, 
-                                            player_activity="idle", player_status=100, player_inventory="empty"
-                                            ))
+            self._all_players.append(Player(player_user_name=user_id, player_coordinates={"x": 0, "y": 0}))
             return
         if user_id not in [player.player_user_name for player in self._all_players]:
-            self._all_players.append(Player(player_user_name=user_id, player_coordinates={"x": 0, "y": 0}, 
-                                            player_activity="idle", player_status=100, player_inventory="empty"
-                                            ))
+            self._all_players.append(Player(player_user_name=user_id, player_coordinates={"x": 0, "y": 0}))
             return
         user_id_to_update = [player.player_user_name for player in self._all_players].index(user_id)
 
@@ -79,13 +76,35 @@ class Game:
             self._all_players[user_id_to_update].player_coordinates["x"] -= 10
         if pressed_key == "d":
             self._all_players[user_id_to_update].player_coordinates["x"] += 10
-        # self._all_players[user_id_to_update].player_coordinates_y = y_coordinates
+        if pressed_key == "w":
+            self._all_players[user_id_to_update].player_coordinates["y"] -= 10
+        if pressed_key == "s":
+            self._all_players[user_id_to_update].player_coordinates["y"] += 10
         
     def update_players_ui(self):
         list_of_players: List[Any] = list()
         for player in self._all_players:
             list_of_players.append(player.dict())
         return list_of_players
+
+    def generateWalls(self) -> List[Player]:
+        list_of_walls: List[Player] = list()
+        for inex_of_wall in range(10):
+            wall_x = randint(0, 1024)
+            wall_y = randint(0, 576)
+            list_of_walls.append(Player(player_user_name=f"wall_{inex_of_wall}", player_coordinates={"x": wall_x, "y": wall_y}, player_dimensions={"x": 10, "y": 100}))
+        return list_of_walls
+
+    def updateWalls(self):
+        list_of_walls = self.generateWalls()
+        for wall in list_of_walls:
+            index_of_walls = next((index_wall for index_wall, player in enumerate(self._all_players) if player.player_user_name == wall.player_user_name), -1)
+            if index_of_walls > -1:
+                self._all_players[index_of_walls] = wall
+            else:
+                self._all_players.append(wall)
+
+
 
 # NewGame = Game()
 # NewGame.player_input(user_id="Boicho", pressed_key="w")
