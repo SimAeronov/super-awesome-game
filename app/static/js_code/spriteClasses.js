@@ -5,29 +5,31 @@ class backgroundSprite{
       this.image.src = imageSrc
     }
     
-    draw() {
+    draw(map_name) {
+      let imageSrc = this.image.src.slice(0, this.image.src.lastIndexOf("/")+1);
+      this.image.src = imageSrc + map_name
       canvContext.drawImage(this.image,this.position.x, this.position.y)
     }
   
   }
   
-  class wallSprite{
-    constructor ({player_id, wall_position, wall_dimensions}){
+  class curtainSprite{
+    constructor ({player_id, curtain_position, curtain_dimensions}){
       this.player_id = player_id;
-      this.wall_position = wall_position;
-      this.wall_dimensions = wall_dimensions;
+      this.curtain_position = curtain_position;
+      this.curtain_dimensions = curtain_dimensions;
     }
   
     draw() {
       canvContext.fillStyle = "black";
-      canvContext.fillRect(this.wall_position.x, this.wall_position.y, this.wall_dimensions.x, this.wall_dimensions.y)
+      canvContext.fillRect(this.curtain_position.x, this.curtain_position.y, this.curtain_dimensions.x, this.curtain_dimensions.y)
     }
   
-    update({wall_position, wall_dimensions}) {
-      this.wall_position.x = wall_position.x;
-      this.wall_position.y = wall_position.y;
-      this.wall_dimensions.x = wall_dimensions.x
-      this.wall_dimensions.y = wall_dimensions.y
+    update({curtain_position, curtain_dimensions}) {
+      this.curtain_position.x = curtain_position.x;
+      this.curtain_position.y = curtain_position.y;
+      this.curtain_dimensions.x = curtain_dimensions.x
+      this.curtain_dimensions.y = curtain_dimensions.y
   
     }
   }
@@ -36,12 +38,14 @@ class backgroundSprite{
     constructor({player_id, player_position}) {
       this.player_id = player_id;
       this.player_position = player_position;
+      this.player_image = new Image()
+      this.player_image.src = 'static/images/defaultSprite.png'
     }
   
     draw() {
-      canvContext.fillStyle = "red";
-      console.log("will be drawing with: " + this.player_position.x + " " + this.player_position.y);
-      canvContext.fillRect(this.player_position.x, this.player_position.y, 20, 20)
+      let imageSrc = this.player_image.src.slice(0, this.player_image.src.lastIndexOf("/")+1);
+      this.player_image.src = imageSrc + this.player_id + ".png"
+      canvContext.drawImage(this.player_image,this.player_position.x, this.player_position.y)
     }
   
     update({player_position}) {

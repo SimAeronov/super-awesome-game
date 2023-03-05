@@ -5,6 +5,7 @@ import json
 game_flask = Blueprint("game_flask", __name__, static_folder="/static", template_folder="/templates")
 
 NewGame = Game()
+
 @game_flask.route("/arena_1", methods=["POST", "GET"])
 def arena():
     return render_template("arena_1.html") # type: ignore
