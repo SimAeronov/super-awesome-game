@@ -22,7 +22,7 @@ def clear_generated_images(list_of_all_maps:List[str]):
     list_of_all_required_images.extend(["defaultSprite.png", "map_0.png", "puzzle_img.png"])
     for image_name in listdir(r"app/static/images/"):
         if image_name not in list_of_all_required_images:
-            file_to_be_deleted: str = r"app/static/images/" + image_name
+            file_to_be_deleted: str = path.join(r"app/static/images/" + image_name)
             if path.isfile(file_to_be_deleted):
                 remove(file_to_be_deleted)
             else:
