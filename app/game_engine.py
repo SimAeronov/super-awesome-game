@@ -18,7 +18,10 @@ class Game:
         self._canvasWidth: int = 1024
         self._canvasHeight: int = 576
         # In the future turn this to data from database
-        self.list_of_all_maps: List[str] = ["map_1.png", "map_2.png", "map_3.png", "map_4.png", "map_5.png", "map_6.png"]
+        self.list_of_all_maps: List[str] = ["map_1.png", "map_2.png", "map_3.png", "map_4.png", "map_5.png",
+                                            "map_6.png", "map_7.png", "map_8.png", "map_9.png", "map_10.png",
+                                            "map_11.png", "map_12.png", "map_13.png", "map_14.png", "map_15.png"
+                                            ]
         self._nameOfMap: str = choice(self.list_of_all_maps)
         self._game_state: str = "Playing"
         
