@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template,request, redirect, url_for, session, flash, Response
-from typing import Optional, Union
+from flask import Blueprint, render_template,request, redirect, url_for, session, flash
+from typing import Optional
 from utils.extensions import db
 
 menus = Blueprint("menus", __name__, static_folder="/static", template_folder="/templates")
@@ -36,7 +36,7 @@ def login() -> str:
         flash(f"Logged in as: {user}", "info")
         response = redirect(url_for("menus.user"))
         response.set_cookie('user_id', user)
-        return response
+        return response # type: ignore
     else:
         if "user" in session:
             flash("Already logged in", "info")

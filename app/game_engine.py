@@ -1,29 +1,29 @@
 from typing import List, Optional, Any, Tuple, Dict
-from random import randint
+from random import randint, choice
 from utils.game_entity_classes import Player, GameAttributes
-from utils.game_image_utils import generate_image_for_player
-
-
-
-
-
+from utils.game_image_utils import generate_image_for_player, clear_generated_images
 
 # Create Game class
 class Game:
     """
         Initiate Game, use player_input(pressed_key) to update players, use update_players_ui() to retrieve ui data
     """
-    __slots__ = ("_all_players", "_canvasWidth", "_canvasHeight", "_nameOfMap", "_game_state")
+    __slots__ = ("_all_players", "_canvasWidth", "_canvasHeight", "_nameOfMap", "_game_state", "list_of_all_maps")
 
     def __init__(self) -> None:
         self._all_players: List[Player] = list()
         self._canvasWidth: int = 1024
         self._canvasHeight: int = 576
-        self._nameOfMap: str = f"map_{randint(1, 6)}.png"
+        # In the future turn this to data from database
+        self.list_of_all_maps: List[str] = ["map_1.png", "map_2.png", "map_3.png", "map_4.png", "map_5.png", "map_6.png"]
+        self._nameOfMap: str = choice(self.list_of_all_maps)
         self._game_state: str = "Playing"
         
     
     def player_input(self,pressed_key: str, user_id: Optional[str] = "simple_user"):
+        """ 
+            Main method that is used to update the internal state of the game via input as user_id and pressed_key
+        """
         self.updateCurtains()
         user_id = user_id.lower() # type: ignore
         pressed_key = pressed_key.lower()
@@ -49,15 +49,21 @@ class Game:
             self._all_players[user_id_to_update].player_coordinates["y"] += 10
         
     def update_players_ui(self):
+        """
+            Method used to return the current state of the game, check for reset or win condition
+        """
         list_of_players: List[Any] = list()
         list_of_players.append(GameAttributes(game_map_name=self._nameOfMap, game_state=self._game_state).dict())
+        if self._game_state == "Reset":
+            self._game_state = "Playing"
         for player in self._all_players:
             list_of_players.append(player.dict(exclude={"player_win_coord"}, exclude_none=True))
         return list_of_players
 
     def generateCurtains(self) -> List[Player]:
+
         list_of_curtains: List[Player] = list()
-        for inex_of_curtain in range(1):
+        for inex_of_curtain in range(3):
             curtain_coord_x = randint(0, 1024)
             curtain_coord_y = randint(0, 576)
             curtain_dim_x = randint(100, 300)
@@ -78,16 +84,17 @@ class Game:
 
     # Gotta fix the types for player_coords and player_win_coords
     def checkIfPlayerWon(self, player_coords:Dict[str,int], player_win_coords:Tuple[int, int]):
-        print(f"\n wing is for {player_win_coords} player at {player_coords} \n")
         if player_coords["x"] > player_win_coords[0] - 15 and player_coords["x"] < player_win_coords[0] + 15:
             if player_coords["y"] > player_win_coords[1] - 15 and player_coords["y"] < player_win_coords[1] + 15:
                 return True
         return False
-            
+    
+    def resetGame(self):
+        self._game_state = "Reset"
+        self._nameOfMap: str = f"map_{randint(1, 6)}.png"
+        self._all_players.clear()
+        clear_generated_images(list_of_all_maps=self.list_of_all_maps)
 
-
-
-        
 
 # NewGame = Game()
 # NewGame.player_input(user_id="Boicho", pressed_key="w")

@@ -9,7 +9,16 @@
         {% endif %}
     {% endwith %}
 {% if user %}
-    <p>Welcome to the arena, {{user}}</p>
+    <h1>Welcome to the arena, {{user}}</h1>
+    <p>This is a simple puzzle game that I've </p>
+    <p>worked on, so that we can play it together</p>
+    <p>with my beautiful girl while she's away.</p>
+    <h3>How to play:</h3>
+    <p>1) Enter Battle from the Game Lobby</p>
+    <p>2) Press any key to update the UI frame</p>
+    <p>3) Your player is a piece of the puzzle</p>
+    <p>4) Move by pressing "W, A, S, D" keys</p>
+    <p>5) Your goal is to find your spot :)</p>
 {% else %}
     <form action="#" method="POST">
         <input type="text" name="player_name" placeholder="Player Name" value="{{player_name if player_name}}" />

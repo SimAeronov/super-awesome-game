@@ -13,7 +13,6 @@ canvContext.fillRect(0, 0, canvas.width, canvas.height);
 // Used to redraw everything on the screen
 function update_ui(update_ui_all_players){
   if (default_status == "Playing" ){
-    console.log("Drawing new scene " + update_ui_all_players);
     // Reset UI background 
     canvContext.fillStyle = "black";
     canvContext.fillRect(0, 0, canvas.width, canvas.height);
@@ -21,7 +20,13 @@ function update_ui(update_ui_all_players){
     for (let index_player = 0; index_player < update_ui_all_players.length; index_player++){
       update_ui_all_players[index_player].draw();
     }
-  } else {
+  } 
+  else if (default_status == "Reset" ) {
+    default_map = "map_0.png"
+    default_status = "Playing"
+    array_of_all_players = []
+
+  }else {
     canvContext.fillStyle = "black";
     canvContext.fillRect(0, 0, canvas.width, canvas.height);
     background.draw(default_map)
@@ -53,7 +58,6 @@ function GetUpdatePlayerDataInput(update_player_data_input) {
         // Check if we have any players, if not -> add first user as new player (Sprite)
         let player_id_inside_array = array_of_all_players.findIndex(player => player.player_id === player_name);
         if (player_id_inside_array > -1) {
-          console.log("Updating Player: " + player_name)
           array_of_all_players[player_id_inside_array].update({
             player_position: {x: player_position.x, y: player_position.y}, 
           });
@@ -85,6 +89,9 @@ function GetUpdatePlayerDataInput(update_player_data_input) {
       if (update_player_data_input[index_player].game_state.slice(0, 6) == "Winner") {
         default_status = update_player_data_input[index_player].game_state
       }
+      else if (update_player_data_input[index_player].game_state.slice(0, 5) == "Reset") {
+        default_status = "Reset"
+      }
     }
   }
 }
@@ -100,7 +107,6 @@ window.addEventListener("keydown", async (event) => {
 
   const response = await fetch('/listen');
   const response_for_all_players = await response.json();
-  console.log(response_for_all_players)
   GetUpdatePlayerDataInput(update_player_data_input=response_for_all_players)
   update_ui(update_ui_all_players=array_of_all_players)
 })
