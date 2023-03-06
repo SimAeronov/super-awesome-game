@@ -101,7 +101,7 @@ class Game:
     
     def resetGame(self):
         self._game_state = "Reset"
-        self._nameOfMap: str = f"map_{randint(1, 6)}.png"
+        self._nameOfMap: str = choice(self.list_of_all_maps)
         self._all_players.clear()
         clear_generated_images(list_of_all_maps=self.list_of_all_maps)
 
