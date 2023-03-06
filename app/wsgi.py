@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import timedelta
 from utils.extensions import db
 from arena_interfaces.game_flask import game_flask
@@ -24,7 +24,10 @@ db.init_app(app)
 @app.route("/", methods=["POST", "GET"])
 def home() -> str:
     if request.method == "POST":
-        return redirect(url_for("game_flask.arena")) # type: ignore
+        if "user" in session:
+            return redirect(url_for("game_flask.arena")) # type: ignore
+        else:
+            return redirect(url_for("menus.login")) # type: ignore 
     return render_template("index.html")
 
 if __name__ == "__main__":

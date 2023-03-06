@@ -9,6 +9,7 @@ class users(db.Model): # type: ignore
     _id = db.Column("id", db.Integer, primary_key=True)
     user_name = db.Column(db.String(100))
     player_name = db.Column(db.String(100))
+    player_score = db.Column(db.Integer)
 
     def __init__(self, user_name:str, player_name:Optional[str]):
         self.user_name = user_name
@@ -54,6 +55,7 @@ def user() -> str:
             session["player_name"] = player_name
             found_user = users.query.filter_by(user_name=user).first() # type: ignore 
             found_user.player_name = player_name
+            found_user.player_score = 0
             db.session.commit() # type: ignore 
         else:
             if "player_name" in session:

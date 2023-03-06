@@ -2,6 +2,6 @@
 {% block title %}Scores{% endblock %}
 {% block content %}
     {% for item in values %}
-        <p>Player: {{item.player_name}} | Score: 8</p>
+        <p>Player: {{item.player_name}} | Score: {{item.player_score}}</p>
     {% endfor %}
 {% endblock %}

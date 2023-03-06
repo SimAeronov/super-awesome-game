@@ -2,6 +2,9 @@ from typing import List, Optional, Any, Tuple, Dict
 from random import randint, choice
 from utils.game_entity_classes import Player, GameAttributes
 from utils.game_image_utils import generate_image_for_player, clear_generated_images
+from utils.extensions import db
+from menu_interfaces.menus import users
+from sqlalchemy import func
 
 # Create Game class
 class Game:
@@ -37,6 +40,10 @@ class Game:
 
         if self.checkIfPlayerWon(player_coords=self._all_players[user_id_to_update].player_coordinates,
                                player_win_coords=self._all_players[user_id_to_update].player_win_coord): # type: ignore
+            if self._game_state == "Playing":
+                found_user = users.query.filter(func.lower(users.user_name) == self._all_players[user_id_to_update].player_user_name).first() # type: ignore 
+                found_user.player_score += 1 # type: ignore 
+                db.session.commit() # type: ignore 
             self._game_state = "Winner: " + self._all_players[user_id_to_update].player_user_name
 
         if pressed_key == "a" and self._all_players[user_id_to_update].player_coordinates["x"] > 0:
