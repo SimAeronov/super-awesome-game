@@ -18,7 +18,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['SOCK_SERVER_OPTIONS'] = {'ping_interval': 5}
 app.config['SECRET_KEY'] = "babati"
 
-db.init_app(app)
+db.init_app(app) # type: ignore
 
 
 @app.route("/", methods=["POST", "GET"])

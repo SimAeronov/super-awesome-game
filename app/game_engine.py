@@ -36,7 +36,7 @@ class Game:
         if user_id not in [player.player_user_name for player in self._all_players]:
             self._all_players.append(Player(player_user_name=user_id,
                                              player_coordinates={"x": randint(0, 1024), "y": randint(0, 576)},
-                                             player_win_coord=generate_image_for_player(name_of_map=self._nameOfMap, name_of_player=user_id)
+                                             player_win_coord=generate_image_for_player(name_of_map=self._nameOfMap,name_of_player=user_id)
                                              ))
             return
         user_id_to_update = [player.player_user_name for player in self._all_players].index(user_id)
@@ -101,9 +101,11 @@ class Game:
     
     def resetGame(self):
         self._game_state = "Reset"
-        self._nameOfMap: str = choice(self.list_of_all_maps)
+        while (new_map_to_be_used := choice(self.list_of_all_maps)) == self._nameOfMap:
+            pass
+        self._nameOfMap: str = new_map_to_be_used
         self._all_players.clear()
-        clear_generated_images(list_of_all_maps=self.list_of_all_maps)
+        clear_generated_images(list_of_all_maps=self.list_of_all_maps, name_of_map=self._nameOfMap)
 
 
 # NewGame = Game()

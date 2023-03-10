@@ -1,3 +1,6 @@
+// Bad practice with all those global vars, might add 'em to class in the future.
+let default_map = "map_0.png"
+
 class backgroundSprite{
     constructor({position, imageSrc}){
       this.position = position
@@ -44,7 +47,7 @@ class backgroundSprite{
   
     draw() {
       let imageSrc = this.player_image.src.slice(0, this.player_image.src.lastIndexOf("/")+1);
-      this.player_image.src = imageSrc + this.player_id + ".png"
+      this.player_image.src = imageSrc + this.player_id + "-" + default_map
       canvContext.drawImage(this.player_image,this.player_position.x, this.player_position.y)
     }
   

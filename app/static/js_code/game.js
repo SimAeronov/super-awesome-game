@@ -1,11 +1,9 @@
-// Game UI starts here
+// Game UI starts here, should work on all those global vars
 const canvas = document.querySelector("canvas");
 const canvContext = canvas.getContext("2d");
 
 canvas.width = 1024;
 canvas.height = 576;
-const gravity = 0.2;
-let default_map = "map_0.png"
 let default_status = "Playing"
 canvContext.fillRect(0, 0, canvas.width, canvas.height);
 
