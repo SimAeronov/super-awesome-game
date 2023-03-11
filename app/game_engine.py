@@ -35,7 +35,7 @@ class Game:
         pressed_key = pressed_key.lower()
         if user_id not in [player.player_user_name for player in self._all_players]:
             self._all_players.append(Player(player_user_name=user_id,
-                                             player_coordinates={"x": randint(0, 1024), "y": randint(0, 576)},
+                                             player_coordinates={"x": randint(40, 984), "y": randint(40, 536)},
                                              player_win_coord=generate_image_for_player(name_of_map=self._nameOfMap,name_of_player=user_id)
                                              ))
             return

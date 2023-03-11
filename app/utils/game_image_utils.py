@@ -11,8 +11,8 @@ def generate_image_for_player(name_of_map:str = "map_0", name_of_player:str = "d
     image_save_path = path.join(r"app/static/images/" + name_of_player_for_image)
     
     image = cv2.imread(image_open_path)
-    target_x = randint(0, 576)
-    target_y = randint(0, 1024)
+    target_x = randint(40, 536)
+    target_y = randint(40, 984)
     crop_image = image[target_y:target_y+30, target_x:target_x+30]
     cv2.imwrite(image_save_path, crop_image)
     return(target_x, target_y)
